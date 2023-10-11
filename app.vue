@@ -88,15 +88,30 @@
 </script>
 
 <template>
-  <div class="p-12">
 
-    <div class="flex flex-col lg:flex-row gap-x-4">
-      <textarea placeholder="Paste your SVG here...." v-model="svgContent"></textarea>
-      <textarea v-model="convertedSvg"></textarea>
-      <div @click="copy" v-html="convertedSvg"></div>
+  <div class="p-6 md:p-12 container mx-auto">
+    <h1 class="text-2xl font-bold">SVG Converter</h1>
+    <h2 class="text-xl font-bold my-6">
+      Compresses SVGs and turns the &lt;style&gt; tag in the SVG defininition into presentation attributes
+    </h2>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="flex flex-col space-y-3">
+        <span class="font-bold">Input</span>
+        <textarea placeholder="Paste your SVG here...." v-model="svgContent"></textarea>
+      </div>
+      <div class="flex flex-col space-y-3">
+        <span class="font-bold">Output</span>
+        <textarea v-model="convertedSvg"></textarea>
+      </div>
+      <div class="flex items-center justify-center rounded-md" @click="copy" v-html="convertedSvg"></div>
     </div>
 
-    <div class="inline-block p-4 mt-4 cursor-pointer rounded bg-red-400 text-white" @click="copy">Copy to clipboard</div>
+    <div class="flex justify-center">
+      <div
+          class="inline-block p-4 mt-8 lg:mt-4 cursor-pointer rounded-md bg-emerald-600 text-white w-full lg:w-1/5 text-center"
+          @click="copy">Copy to Clipboard
+      </div>
+    </div>
 
   </div>
 
@@ -104,10 +119,12 @@
 
 <style>
   textarea {
-    @apply border p-4 w-[400px] h-[400px]
+    @apply border text-xs rounded-md p-4 h-[400px] focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent;
   }
-
+  html {
+    font-family: 'Roboto Mono', sans-serif;
+  }
   svg {
-    @apply w-96
+    @apply max-h-96;
   }
 </style>
