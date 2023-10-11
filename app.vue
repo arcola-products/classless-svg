@@ -68,10 +68,14 @@
 </svg>`);
 
   const convertedSvg = ref('');
+  const errorConverting = ref(false);
+  const errorMessage = ref('');
 
   const convert = () => {
     $fetch('/api/convert', {method: 'post', body: {svgData: svgContent.value}}).then(data => {
       convertedSvg.value = data.optimizedSvgString;
+      errorConverting.value = !data.success;
+      errorMessage.value = data.errorMessage;
     });
   }
 
@@ -106,11 +110,19 @@
       <div class="flex items-center justify-center rounded-md" @click="copy" v-html="convertedSvg"></div>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex flex-col space-y-4 justify-center items-center">
       <div
           class="inline-block p-4 mt-8 lg:mt-4 cursor-pointer rounded-md bg-emerald-600 text-white w-full lg:w-1/5 text-center"
           @click="copy">Copy to Clipboard
       </div>
+      <template v-if="errorConverting">
+        <template v-if="errorMessage">
+          <div><strong>Error: </strong>{{errorMessage}}</div>
+        </template>
+        <template v-else>
+          <div>An unknown error occured</div>
+        </template>
+      </template>
     </div>
 
   </div>

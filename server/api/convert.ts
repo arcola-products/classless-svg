@@ -46,8 +46,6 @@ async function convertStylesToAttributes(svgString) {
         attribute => document.querySelector('svg').removeAttribute(attribute)
     )
 
-
-
     return dom.serialize();
 
 }
@@ -56,18 +54,27 @@ async function convertStylesToAttributes(svgString) {
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
 
-    const result = optimize(body.svgData, {
-        plugins: [],
-    });
-
-    const svgString = result.data;
-
+    let success = true;
     let optimizedSvgString = '';
+    let errorMessage = '';
 
-    await convertStylesToAttributes(svgString).then(result => {
-        optimizedSvgString = result;
-    });
+    try {
 
-    return { optimizedSvgString }
+        const result = optimize(body.svgData, {
+            plugins: [],
+        });
+
+        const svgString = result.data;
+
+        await convertStylesToAttributes(svgString).then(result => {
+            optimizedSvgString = result;
+        });
+
+    } catch (error) {
+        errorMessage = error.message;
+        success = false
+    }
+
+    return { optimizedSvgString, success, errorMessage }
 
 })
