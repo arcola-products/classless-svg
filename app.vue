@@ -66,26 +66,37 @@
   <path class="cls-1" d="m319.19,274.27c1.12-1.81,1.92-3.51,3.08-4.93,7.26-8.89,14.65-17.68,21.85-26.62,1.2-1.49,1.96-3.48,2.45-5.37,2.16-8.36,6.31-15.15,13.62-20.16,5.13-3.51,9.62-7.94,14.46-11.89,1.24-1.01,2.64-2.25,4.1-2.47,1.45-.22,3.54.29,4.46,1.29.69.75.53,3.27-.24,4.18-2.3,2.76-5,5.22-7.7,7.63-4.2,3.74-8.63,7.21-12.74,11.04-1.67,1.55-3.38,3.58-3.94,5.7-2.1,7.88-6,14.39-11.7,20.33-6.64,6.91-12.26,14.8-18.37,22.22-2.98,3.62-5.2,4.29-7.44,2.21-.81-.75-1.2-1.97-1.89-3.16Z"/>
   <path class="cls-1" d="m192.99,369.44c1.47,1.46,3.09,2.4,3.56,3.75.33.96-.53,2.98-1.48,3.61-2.47,1.65-5.18,3.06-7.99,4.01-1.19.4-3.66-.17-4.1-1.04-.63-1.22-.53-3.93.34-4.6,2.79-2.16,6.07-3.68,9.67-5.73Z"/>
 </svg>`);
+
   const convertedSvg = ref('');
 
-  async function convertSvg() {
-    await $fetch('/api/convert', {method: 'post', body: {svgData: svgContent.value}}).then((data) => {
+  const convert = () => {
+    $fetch('/api/convert', {method: 'post', body: {svgData: svgContent.value}}).then(data => {
       convertedSvg.value = data.optimizedSvgString;
     });
   }
+
+  watch(svgContent, convert);
+
+  const copy = () => {
+    navigator.clipboard.writeText(convertedSvg.value);
+  }
+
+  onMounted(() => {
+    convert();
+  });
 
 </script>
 
 <template>
   <div class="p-12">
 
-    <div class="flex gap-x-4">
-      <textarea v-model="svgContent"></textarea>
+    <div class="flex flex-col lg:flex-row gap-x-4">
+      <textarea placeholder="Paste your SVG here...." v-model="svgContent"></textarea>
       <textarea v-model="convertedSvg"></textarea>
-      <div v-html="convertedSvg"></div>
+      <div @click="copy" v-html="convertedSvg"></div>
     </div>
 
-    <div class="inline-block p-4 mt-4 cursor-pointer rounded bg-red-400 text-white" @click="convertSvg">Convert</div>
+    <div class="inline-block p-4 mt-4 cursor-pointer rounded bg-red-400 text-white" @click="copy">Copy to clipboard</div>
 
   </div>
 
