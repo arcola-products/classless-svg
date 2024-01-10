@@ -7,8 +7,8 @@ async function convertStylesToAttributes(svgString) {
     const dom = new JSDOM(svgString, { contentType: "image/svg+xml" });
     const document = dom.window.document;
 
-    let styleText = document.querySelector('defs style');
-    
+    let styleText = document.querySelector('style');
+
     if(styleText) {
         styleText = styleText.textContent;
     } else {
@@ -48,7 +48,14 @@ async function convertStylesToAttributes(svgString) {
         }
     });
 
-    document.querySelector('defs').remove();
+    const defs = document.querySelector('defs');
+    if(defs) {
+        defs.remove();
+    }
+    if(styleText) {
+        styleText.remove();
+    }
+
     ['id','data-name'].forEach(
         attribute => document.querySelector('svg').removeAttribute(attribute)
     )
