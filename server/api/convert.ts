@@ -7,7 +7,14 @@ async function convertStylesToAttributes(svgString) {
     const dom = new JSDOM(svgString, { contentType: "image/svg+xml" });
     const document = dom.window.document;
 
-    const styleText = document.querySelector('defs style').textContent;
+    let styleText = document.querySelector('defs style');
+    
+    if(styleText) {
+        styleText = styleText.textContent;
+    } else {
+        styleText = '';
+    }
+
     const stylesheet = cssom.parse(styleText);
 
     const classesWithStyles = new Set();
