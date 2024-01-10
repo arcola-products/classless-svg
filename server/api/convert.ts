@@ -52,8 +52,8 @@ async function convertStylesToAttributes(svgString) {
     if(defs) {
         defs.remove();
     }
-    if(styleText) {
-        styleText.remove();
+    if(document.querySelector('style')) {
+        document.querySelector('style').remove();
     }
 
     ['id','data-name'].forEach(
